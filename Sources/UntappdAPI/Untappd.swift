@@ -17,11 +17,20 @@
 import Foundation
 
 public class Untappd {
-    private init(clientID: String, clientSecret: String) {
-        
+    private init(clientID: String, clientSecret: String, fetch: NetworkFetch) {
+        Injection.shared.clientID = clientID
+        Injection.shared.clientSecret = clientSecret
+        Injection.shared.fetch = fetch
     }
     
-    public static func anonymous(clientID: String, clientSecret: String) -> Untappd {
-        return Untappd(clientID: clientID, clientSecret: clientSecret)
+    public static func anonymous(clientID: String, clientSecret: String, fetch: NetworkFetch) -> Untappd {
+        return Untappd(clientID: clientID, clientSecret: clientSecret, fetch: fetch)
+    }
+    
+    public func search(beer name: String) {
+        Logging.log("Search '\(name)")
+        let request = SearchBeerRequest(name: name)
+        Injection.shared.inject(into: request)
+        request.execute()
     }
 }
