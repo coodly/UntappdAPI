@@ -20,11 +20,31 @@ private enum Method: String {
     case GET
 }
 
+public enum UntappdError: Error {
+    case noData
+    case network(Error)
+    case server(String)
+    case invalidJSON
+    case unknown
+}
+
+internal struct NetworkResult<T: Codable> {
+    var value: T?
+    let statusCode: Int
+    let error: UntappdError?
+}
+
 internal enum Parameter {
     case query(String)
 }
 
-internal class NetworkRequest {
+internal class NetworkRequest<Response: Codable> {
+    private lazy var decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }()
+
     private let baseURL: URL
     internal init(baseURL: URL = URL(string: "https://api.untappd.com/v4")!) {
         self.baseURL = baseURL
@@ -80,7 +100,44 @@ internal class NetworkRequest {
         Injection.shared.fetch.fetch(request: request as URLRequest, completion: handle(data:response:error:))
     }
     
-    private func handle(data: Data?, response: URLResponse?, error: Error?) {
+    private func handle(data: Data?, response: URLResponse?, error networkError: Error?) {
+        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+        Logging.log("Status code: \(statusCode)")
         
+        if let data = data, let string = String(data: data, encoding: .utf8) {
+            Logging.log("Response:\n\(string)")
+        }
+        
+        var value: Response?
+        var untappdError: UntappdError?
+        
+        defer {
+            self.handle(result: NetworkResult(value: value, statusCode: statusCode, error: untappdError))
+        }
+        
+        if let remoteError = networkError  {
+            untappdError = .network(remoteError)
+            return
+        }
+        
+        if statusCode == 200, data == nil {
+            untappdError = .noData
+            return
+        }
+        
+        guard let data = data else {
+            untappdError = .noData
+            return
+        }
+        
+        do {
+            value = try self.decoder.decode(Response.self, from: data)
+        } catch {
+            untappdError = .invalidJSON
+        }
+    }
+    
+    internal func handle(result: NetworkResult<Response>) {
+        Logging.log("Handle \(result)")
     }
 }

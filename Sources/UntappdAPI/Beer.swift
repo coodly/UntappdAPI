@@ -16,27 +16,9 @@
 
 import Foundation
 
-internal struct BeerSearchResult: Codable {
-    let response: BeerSearchResponse
-}
-
-internal struct BeerSearchResponse: Codable {
-    let beers: Beers
-}
-
-internal struct Beers: Codable {
-    let items: [BeerItem]
-}
-
-private let SearchPath = "/search/beer"
-
-internal class SearchBeerRequest: NetworkRequest<BeerSearchResult> {
-    private let name: String
-    internal init(name: String) {
-        self.name = name
-    }
-    
-    override func performRequest() {
-        get(path: SearchPath, params: [.query(name)])
-    }
+public struct Beer: Codable {
+    public let bid: Int
+    public let beerName: String
+    public let beerStyle: String
+    public let beerAbv: Double
 }
