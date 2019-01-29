@@ -28,6 +28,11 @@ internal struct Beers: Codable {
     let items: [BeerItem]
 }
 
+internal enum BeersSort: String {
+    case checkin
+    case name
+}
+
 private let SearchPath = "/search/beer"
 
 internal class SearchBeerRequest: NetworkRequest<BeerSearchResult> {
@@ -37,6 +42,6 @@ internal class SearchBeerRequest: NetworkRequest<BeerSearchResult> {
     }
     
     override func performRequest() {
-        get(path: SearchPath, params: [.query(name)])
+        get(path: SearchPath, params: [.query(name), .sort(BeersSort.name.rawValue)])
     }
 }
