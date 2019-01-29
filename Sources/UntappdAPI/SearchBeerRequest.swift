@@ -42,6 +42,6 @@ internal class SearchBeerRequest: NetworkRequest<BeerSearchResult> {
     }
     
     override func performRequest() {
-        get(path: SearchPath, params: [.query(name), .sort(BeersSort.name.rawValue)])
+        get(path: SearchPath, params: [.query(name), .sort(BeersSort.name.rawValue), .limit(50)])
     }
 }

@@ -37,6 +37,8 @@ internal struct NetworkResult<T: Codable> {
 internal enum Parameter {
     case query(String)
     case sort(String)
+    case limit(Int)
+    case offset(Int)
 }
 
 internal class NetworkRequest<Response: Codable> {
@@ -81,6 +83,12 @@ internal class NetworkRequest<Response: Codable> {
             case .sort(let by):
                 name = "sort"
                 value = by
+            case .limit(let limit):
+                name = "limit"
+                value = String(describing: limit)
+            case .offset(let offset):
+                name = "offset"
+                value = String(describing: offset)
             }
             
             queryItems.append(URLQueryItem(name: name, value: value))
