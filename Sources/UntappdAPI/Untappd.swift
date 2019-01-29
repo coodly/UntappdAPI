@@ -27,10 +27,11 @@ public class Untappd {
         return Untappd(clientID: clientID, clientSecret: clientSecret, fetch: fetch)
     }
     
-    public func search(beer name: String) {
+    public func search(beer name: String, completion: @escaping ((BeersResult) -> Void)) {
         Logging.log("Search '\(name)")
         let request = SearchBeerRequest(name: name)
         Injection.shared.inject(into: request)
+        request.resultHandler = completion
         request.execute()
     }
 }

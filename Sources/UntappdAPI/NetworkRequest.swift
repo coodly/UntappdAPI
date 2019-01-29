@@ -41,12 +41,23 @@ internal enum Parameter {
     case offset(Int)
 }
 
-internal class NetworkRequest<Response: Codable> {
+internal class NetworkRequest<Result, Response: Codable> {
     private lazy var decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }()
+    
+    internal var result: Result? {
+        didSet {
+            guard let value = result else {
+                return
+            }
+            
+            resultHandler?(value)
+        }
+    }
+    internal var resultHandler: ((Result) -> Void)?
 
     private let baseURL: URL
     internal init(baseURL: URL = URL(string: "https://api.untappd.com/v4")!) {

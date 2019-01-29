@@ -33,9 +33,17 @@ internal enum BeersSort: String {
     case name
 }
 
+public struct BeersResult {
+    public let items: [BeerItem]
+    public var hasMore: Bool {
+       return items.count == 50
+    }
+    public let error: Error?
+}
+
 private let SearchPath = "/search/beer"
 
-internal class SearchBeerRequest: NetworkRequest<BeerSearchResult> {
+internal class SearchBeerRequest: NetworkRequest<BeersResult, BeerSearchResult> {
     private let name: String
     internal init(name: String) {
         self.name = name
@@ -43,5 +51,9 @@ internal class SearchBeerRequest: NetworkRequest<BeerSearchResult> {
     
     override func performRequest() {
         get(path: SearchPath, params: [.query(name), .sort(BeersSort.name.rawValue), .limit(50)])
+    }
+    
+    override func handle(result: NetworkResult<BeerSearchResult>) {
+        self.result = BeersResult(items: result.value?.response.beers.items ?? [], error: result.error)
     }
 }
