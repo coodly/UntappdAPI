@@ -16,13 +16,6 @@
 
 import Foundation
 
-public struct BeerDetails: Codable {
-    public let bid: Int
-    public let beerName: String
-    public let beerStyle: String
-    public let beerDescription: String
-    public let beerAbv: Double
-    public let ratingScore: Double
-    public let brewery: Brewery
-    public let media: MediaContainer?
+public struct MediaContainer: Codable {
+    let items: [Media]
 }
