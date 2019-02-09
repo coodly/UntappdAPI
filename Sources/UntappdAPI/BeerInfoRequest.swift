@@ -33,14 +33,16 @@ public struct BeerInfoResult {
 
 internal class BeerInfoRequest: NetworkRequest<BeerInfoResult, BeerInfoResponse> {
     private let beerId: Int
-    internal init(beerId: Int) {
+    private let compact: Bool
+    internal init(beerId: Int, compact: Bool) {
         self.beerId = beerId
+        self.compact = compact
     }
     
     override func performRequest() {
         let path = String(format: BeerInfoPathBase, NSNumber(value: beerId))
-        
-        get(path: path)
+        let params: [Parameter] = compact ? [.compact(true)] : []
+        get(path: path, params: params)
     }
     
     override func handle(result: NetworkResult<BeerInfoResponse>) {

@@ -35,13 +35,13 @@ public class Untappd {
         request.execute()
     }
     
-    public func info(for beer: BeerOverview, completion: @escaping ((BeerInfoResult) -> Void)) {
-        info(for: beer.bid, completion: completion)
+    public func info(for beer: BeerOverview, compact: Bool = false, completion: @escaping ((BeerInfoResult) -> Void)) {
+        info(for: beer.bid, compact: compact, completion: completion)
     }
 
-    public func info(for beerId: Int, completion: @escaping ((BeerInfoResult) -> Void)) {
+    public func info(for beerId: Int, compact: Bool = false, completion: @escaping ((BeerInfoResult) -> Void)) {
         Logging.log("Fetch info for \(beerId)")
-        let request = BeerInfoRequest(beerId: beerId)
+        let request = BeerInfoRequest(beerId: beerId, compact: compact)
         Injection.shared.inject(into: request)
         request.resultHandler = completion
         request.execute()

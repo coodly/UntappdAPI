@@ -39,6 +39,7 @@ internal enum Parameter {
     case sort(String)
     case limit(Int)
     case offset(Int)
+    case compact(Bool)
 }
 
 internal class NetworkRequest<Result, Response: Codable> {
@@ -100,6 +101,9 @@ internal class NetworkRequest<Result, Response: Codable> {
             case .offset(let offset):
                 name = "offset"
                 value = String(describing: offset)
+            case .compact(let compact):
+                name = "compact"
+                value = String(describing: compact)
             }
             
             queryItems.append(URLQueryItem(name: name, value: value))
