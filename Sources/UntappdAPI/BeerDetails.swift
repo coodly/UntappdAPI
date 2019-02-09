@@ -16,7 +16,12 @@
 
 import Foundation
 
-public struct BeerItem: Codable {
-    public let beer: BeerOverview
+public struct BeerDetails: Codable {
+    public let bid: Int
+    public let beerName: String
+    public let beerStyle: String
+    public let beerDescription: String
+    public let beerAbv: Double
+    public let ratingScore: Double
     public let brewery: Brewery
 }

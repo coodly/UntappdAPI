@@ -34,4 +34,16 @@ public class Untappd {
         request.resultHandler = completion
         request.execute()
     }
+    
+    public func info(for beer: BeerOverview, completion: @escaping ((BeerInfoResult) -> Void)) {
+        info(for: beer.bid, completion: completion)
+    }
+
+    public func info(for beerId: Int, completion: @escaping ((BeerInfoResult) -> Void)) {
+        Logging.log("Fetch info for \(beerId)")
+        let request = BeerInfoRequest(beerId: beerId)
+        Injection.shared.inject(into: request)
+        request.resultHandler = completion
+        request.execute()
+    }
 }

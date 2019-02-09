@@ -72,7 +72,7 @@ internal class NetworkRequest<Result, Response: Codable> {
         Logging.log("Perform request")
     }
     
-    internal func get(path: String, params: [Parameter]) {
+    internal func get(path: String, params: [Parameter] = []) {
         execute(method: .GET, to: path, params: params)
     }
     
@@ -156,6 +156,7 @@ internal class NetworkRequest<Result, Response: Codable> {
         do {
             value = try self.decoder.decode(Response.self, from: data)
         } catch {
+            Logging.log("Decode error: \(error)")
             untappdError = .invalidJSON
         }
     }

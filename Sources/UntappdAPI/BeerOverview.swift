@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct Beer: Codable {
+public struct BeerOverview: Codable {
     public let bid: Int
     public let beerName: String
     public let beerStyle: String
